@@ -2,13 +2,17 @@ const express = require("express");
 let router = express.Router();
 
 //modelschema
-const Inventry = require("../../models/inventrySchemaModel");
+//curly bracket use when file export more then 1 module and parameter in sequence
+const { Inventry  } = require("../../models/inventrySchemaModel");
+const validateProduct = require("../../middlewares/validateProduct")
 
 router.get("/", (req, res) => {
-  res.render("index.ejs",{title:"Server",message:"RestFull Api Server is Running"})
+
+  res.send("<h1>Server is Running </h1>");
+  // res.render("../views/index");
 });
 
-router.post("/post", async (req, res) => {
+router.post("/post",validateProduct,async (req, res) => {
   try {
     let data = req.body;
     const inventry = new Inventry({
@@ -29,8 +33,7 @@ router.post("/post", async (req, res) => {
 router.get("/getdata", async (req, res) => {
   try {
     const data = await Inventry.find();
-    if(!data)
-          return res.status(400).send("Data not found In dataBase");
+    if (!data) return res.status(400).send("Data not found In dataBase");
     // data.splice(1, 1);
     res.send(data);
   } catch (err) {
@@ -52,8 +55,7 @@ router.get("/getdata/:index", async (req, res) => {
 router.put("/update/:index", async (req, res) => {
   try {
     let inventry = await Inventry.findById(req.params.index);
-    if(!inventry)
-      return res.status(400).send("Item not found in DataBase");
+    if (!inventry) return res.status(400).send("Item not found in DataBase");
     inventry.model = req.body.model;
     inventry.price = req.body.price;
     inventry.units = req.body.units;
@@ -61,20 +63,19 @@ router.put("/update/:index", async (req, res) => {
     let result = await inventry.save();
     console.log(result);
     res.send("Updated Data Successfully  " + result);
-    }catch (err) {
+  } catch (err) {
     console.log(err.message);
     res.status(400).send(err.message);
   }
 });
 
-router.delete("/delete/:index", async(req,res)=>{
-
-  try{
-    let data = await Inventry.deleteOne({_id:req.params.index}) ;
+router.delete("/delete/:index", async (req, res) => {
+  try {
+    let data = await Inventry.deleteOne({ _id: req.params.index });
     res.send(data + " is successfully deleted");
-  }catch(err){
+  } catch (err) {
     console.log(err.message);
   }
-})
+});
 
 module.exports = router;

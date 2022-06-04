@@ -18,20 +18,22 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
 //for static path of public folder
 app.use(express.static(path.join(__dirname, "public")));
 
-const inventryRouter = require("./routes/api/inventry");
 // Routes
+const inventryRouter = require("./routes/api/inventry");
 
 //Monodb connection
-mongoose
-  .connect(
-    "mongodb+srv://shahhussainraja:hussain15@hussaindatabase.tgmg1.mongodb.net/?retryWrites=true&w=majority",
-    { useNewUrlParser: true }
-  )
-  .then(() => console.log("Connected to Mongo"))
-  .catch((error) => console.log("error " + error.message));
+mongoose.connect("mongodb://localhost/diabudy", { useNewUrlParser: true })
+.then(() => console.log("Connected to Mongo...."))
+.catch((error) => console.log(error.message));
+
+// mongoose.connect(
+//   "mongodb+srv://shahhussainraja:hussain15@hussaindatabase.tgmg1.mongodb.net/?retryWrites=true&w=majority",{ useNewUrlParser: true })
+//   .then(() => console.log("Connected to Mongo"))
+//   .catch((error) => console.log("error " + error.message));
 
 app.use("/user", inventryRouter);
 // app.use('/users', usersRouter);
