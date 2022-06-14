@@ -12,7 +12,7 @@ InventryModel = mongoose.model("inventryModel", InventrySchema);
 
 function validationInput(data) {
   const schema = Joi.object({
-    model: Joi.string.min(4).required(),
+    model: Joi.string().min(4).required(),
     price: Joi.number().required(),
     units: Joi.number().required(),
   });

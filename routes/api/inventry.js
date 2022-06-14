@@ -4,15 +4,17 @@ let router = express.Router();
 //modelschema
 //curly bracket use when file export more then 1 module and parameter in sequence
 const { Inventry  } = require("../../models/inventrySchemaModel");
-const validateProduct = require("../../middlewares/validateProduct")
-
+let validateProduct = require("../../middlewares/validateProduct");
+let  auth = require("../../middlewares/auth");
+let  admin = require("../../middlewares/admin");
 router.get("/", (req, res) => {
 
   res.send("<h1>Server is Running </h1>");
   // res.render("../views/index");
 });
 
-router.post("/post",validateProduct,async (req, res) => {
+//now lo
+router.post("/post",auth,admin,validateProduct,async (req, res) => {
   try {
     let data = req.body;
     const inventry = new Inventry({
@@ -30,7 +32,7 @@ router.post("/post",validateProduct,async (req, res) => {
   }
 });
 
-router.get("/getdata", async (req, res) => {
+router.get("/getdata",auth,admin, async (req, res) => {
   try {
     const data = await Inventry.find();
     if (!data) return res.status(400).send("Data not found In dataBase");
@@ -52,7 +54,7 @@ router.get("/getdata/:index", async (req, res) => {
   }
 });
 
-router.put("/update/:index", async (req, res) => {
+router.put("/update/:index",validateProduct,async (req, res) => {
   try {
     let inventry = await Inventry.findById(req.params.index);
     if (!inventry) return res.status(400).send("Item not found in DataBase");

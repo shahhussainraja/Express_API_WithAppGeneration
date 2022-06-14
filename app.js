@@ -24,6 +24,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Routes
 const inventryRouter = require("./routes/api/inventry");
+const userRouter = require("./routes/api/userRoutes");
 
 //Monodb connection
 mongoose.connect("mongodb://localhost/diabudy", { useNewUrlParser: true })
@@ -35,7 +36,10 @@ mongoose.connect("mongodb://localhost/diabudy", { useNewUrlParser: true })
 //   .then(() => console.log("Connected to Mongo"))
 //   .catch((error) => console.log("error " + error.message));
 
+
+//app wil use our router here
 app.use("/user", inventryRouter);
+app.use("/user", userRouter);
 // app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
